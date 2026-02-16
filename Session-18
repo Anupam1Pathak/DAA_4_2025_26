@@ -1,0 +1,109 @@
+//Koko Eating Bananas(Leetcode)
+
+class Solution {
+public:
+    long long totalHours(vector<int>& piles, int rate) {
+        long long hours = 0;
+        for (int bananas : piles) {
+            hours += (bananas + rate - 1) / rate; 
+        }
+        return hours;
+    }
+    int minEatingSpeed(vector<int>& piles, int h) {
+        int low=1;
+        int high=*max_element(piles.begin(),piles.end());
+        int ans=high;
+        while(low<=high){
+            int mid = low + (high - low) / 2;
+            if (totalHours(piles, mid) <= h) {
+                ans = mid;          
+                high = mid - 1;     
+            } else {
+                low = mid + 1;      
+            }
+        }
+        return ans;
+    }
+};
+
+
+
+
+//Painter's Partition(geeksforgeeks)
+
+class Solution {
+  public:
+  int countPainters(vector<int>&arr ,int time){
+      int painter=1;
+      int n=arr.size();
+      int boardPainter=0;
+      for(int i=0;i<n;i++){
+          if(boardPainter+arr[i]<=time){
+              boardPainter=boardPainter+arr[i];
+          }
+          else{
+              painter++;
+              boardPainter=arr[i];
+          }
+      }
+      return painter;
+  }
+    int minTime(vector<int>& arr, int k) {
+        int low=*max_element(arr.begin(),arr.end());
+        int high=accumulate(arr.begin(),arr.end(),0);
+        int result=high;
+        while(low<=high){
+            int mid = (low+high)/2;
+            if(countPainters(arr,mid)<=k){
+                high=mid-1;
+                result=mid;
+            }
+            else{
+                low=mid+1;
+            }
+        }
+        return result;
+    }
+};
+
+
+
+
+//Aggressive cows(geeksforgeeks)
+
+class Solution {
+  public:
+  
+  int can_we_place(vector<int>&stalls ,int dist_bw, int no_cows){
+      int last_placed=stalls[0];
+      int cow=1;
+      int n=stalls.size();
+      for(int i=1;i<n;i++){
+          if(stalls[i]-last_placed>=dist_bw){
+              cow++;
+              last_placed=stalls[i];
+          }
+          if(cow>=no_cows){
+              break;
+          }
+      }
+      return cow;
+  }
+    int aggressiveCows(vector<int> &stalls, int k) {
+        int max=*max_element(stalls.begin(),stalls.end());
+        int min=*min_element(stalls.begin(),stalls.end());
+        int low=1;
+        sort(stalls.begin(),stalls.end());
+        int high=max-min;
+        while(low<=high){
+            int mid=(low+high)/2;
+            if(can_we_place(stalls,mid,k)>=k){
+                low=mid+1;
+            }
+            else{
+                high=mid-1;
+            }
+        }
+        return high;
+    }
+};
