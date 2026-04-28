@@ -1,0 +1,46 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Edge {
+    int u, v, w;
+};
+
+int main() {
+    int n, m, src;
+    cin >> n >> m >> src;
+    vector<Edge> edges(m);
+    for (int i = 0; i < m; i++) {
+        cin >> edges[i].u >> edges[i].v >> edges[i].w;
+    }
+
+    const int INF = 1e9;
+    vector<int> dist(n, INF);
+    dist[src] = 0;
+
+    for (int i = 1; i <= n - 1; i++) {
+        for (auto &e : edges) {
+            if (dist[e.u] != INF && dist[e.u] + e.w < dist[e.v]) {
+                dist[e.v] = dist[e.u] + e.w;
+            }
+        }
+    }
+
+    bool negCycle = false;
+    for (auto &e : edges) {
+        if (dist[e.u] != INF && dist[e.u] + e.w < dist[e.v]) {
+            negCycle = true;
+            break;
+        }
+    }
+
+    if (negCycle) {
+        cout << "Negative weight cycle detected" << endl;
+    } else {
+        for (int i = 0; i < n; i++) {
+            if (dist[i] == INF) cout << "INF ";
+            else cout << dist[i] << " ";
+        }
+        cout << endl;
+    }
+    return 0;
+}
